@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,13 +14,27 @@ namespace Proyecto1
     {
         public struct Auto
         {
-            public Auto(string duenio, string color, int anio, int kilometraje_actual, int kilometraje_service) {
+            public string duenio;
+            public string color;
+            public int anio;
+            public int kilometraje_actual;
+            public int kilometraje_service;
+
+
+            public Auto(string duenio, string color, int anio, int kilometraje_actual, int kilometraje_service)
+            {
+                this.duenio = duenio;
+                this.color = color;
+                this.anio = anio;
+                this.kilometraje_actual = kilometraje_actual;
+                this.kilometraje_service = kilometraje_service;
             }   
         }
 
         static void Main(string[] args)
         {
             bool aux = true;
+            ListDictionary autos = new ListDictionary();
             Console.WriteLine("Bienvenido al sistema!");
 
             while (aux)
@@ -48,13 +64,23 @@ namespace Proyecto1
                         int kilometraje_actual = Console.Read();
                         Console.Write("Ingrese el kilometraje de service: ");
                         int kilometraje_service = Console.Read();
+                        autos.Add("duenio", duenio);
+                        autos.Add("color", color);
+                        autos.Add("modelo", modelo);
+                        autos.Add("anio", anio);
+                        autos.Add("kilometraje_actual", kilometraje_actual);
+                        autos.Add("kilometraje_service", kilometraje_service);
+
+
                         break;
                     case 2:
-                        for(int i = 0; i < lista.Length; i++)
+                        foreach(valor in autos)
                         {
-                            Console.WriteLine(lista[i]);
+                            Console.WriteLine(autos.key, autos.value);
                         }
-
+                        Console.WriteLine("Ingrese auto a eliminar:");
+                        string borrar = Console.ReadLine();
+                        autos.Remove(borrar);
                         break;
                     case 3:
                         break;
@@ -64,6 +90,8 @@ namespace Proyecto1
                         break;
                     case 6:
                         aux = false;
+                        break;
+                    default:
                         break;
                 }
 
