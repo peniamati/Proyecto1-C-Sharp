@@ -12,46 +12,47 @@ namespace Proyecto1
     // modelo, anio, kilometraje actual, kilometraje de service, color y el duenio
     internal class Program
     {
-        public struct Auto
+        public static bool aux = true;
+        static void volverMenu()
         {
-            public string duenio;
-            public string color;
-            public int anio;
-            public int kilometraje_actual;
-            public int kilometraje_service;
-
-
-            public Auto(string duenio, string color, int anio, int kilometraje_actual, int kilometraje_service)
+            Console.Write("Desea volver a ver el menu inicial? Y/N:");
+            string volverMenu = Console.ReadLine();
+            string[] opciones = new string[] { "y", "Y", "n", "N" };
+            while (!opciones.Contains(volverMenu))
             {
-                this.duenio = duenio;
-                this.color = color;
-                this.anio = anio;
-                this.kilometraje_actual = kilometraje_actual;
-                this.kilometraje_service = kilometraje_service;
-            }   
+                Console.WriteLine("Opcion invalida!");
+                Console.Write("Desea volver a ver el menu inicial? Y/N:");
+                volverMenu = Console.ReadLine();
+            }
+            if (volverMenu == "n" || volverMenu == "N")
+            {
+                aux = false;
+            }
         }
 
         static void Main(string[] args)
         {
-            bool aux = true;
-            ListDictionary autos = new ListDictionary();
+            
+            List<Dictionary<string, object>> listaAutos = new List<Dictionary<string, object>>();
             Console.WriteLine("Bienvenido al sistema!");
-
+            
             while (aux)
             {
+                Console.WriteLine("------********---------************--------");
+                Console.WriteLine("1 Dar de alta un Tesla");
+                Console.WriteLine("2 Eliminar un Tesla");
+                Console.WriteLine("3 Mostrar listado de Tesla que necesitan Service");
+                Console.WriteLine("4 Reordenar listado por año");
+                Console.WriteLine("5 Mostrar Tesla mas viejo.");
                 Console.Write("Elija una opcion:");
-                Console.Write("1 Dar de alta un Tesla");
-                Console.Write("2 Eliminar un Tesla");
-                Console.Write("3 Mostrar listado de Tesla que necesitan Service");
-                Console.Write("4 Reordenar listado por año");
-                Console.Write("5 Mostrar Tesla mas viejo.");
-                Console.Write("6 Salir");
-                int opcion = Console.Read();
+                int opcion = int.Parse(Console.ReadLine());
 
 
                 switch (opcion)
                 {
                     case 1:
+                        Console.Write("Ingrese la patente del vehiculo: ");
+                        string patente = Console.ReadLine();
                         Console.Write("Ingrese el nombre y el apellido del duenio del vehiculo: ");
                         string duenio = Console.ReadLine();
                         Console.Write("Ingrese el color del vehiculo: ");
@@ -59,28 +60,46 @@ namespace Proyecto1
                         Console.Write("Ingrese el modelo: ");
                         string modelo = Console.ReadLine();
                         Console.Write("Ingrese el anio del Vehículo: ");
-                        int anio = Console.Read();
+                        int anio = int.Parse(Console.ReadLine());
                         Console.Write("Ingrese el Kilometraje de su vehiculo: ");
-                        int kilometraje_actual = Console.Read();
+                        int kilometraje_actual = int.Parse(Console.ReadLine());
                         Console.Write("Ingrese el kilometraje de service: ");
-                        int kilometraje_service = Console.Read();
-                        autos.Add("duenio", duenio);
-                        autos.Add("color", color);
-                        autos.Add("modelo", modelo);
-                        autos.Add("anio", anio);
-                        autos.Add("kilometraje_actual", kilometraje_actual);
-                        autos.Add("kilometraje_service", kilometraje_service);
+                        int kilometraje_service = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Tesla ingresado exitosamente!");
+                                              
 
-
-                        break;
-                    case 2:
-                        foreach(valor in autos)
+                        Dictionary<string, object> nuevoAuto = new Dictionary<string, object>
                         {
-                            Console.WriteLine(autos.key, autos.value);
+                            { "patente", patente },
+                            { "duenio", duenio },
+                            { "color", color },
+                            { "modelo", modelo },
+                            { "kilometraje_actual", kilometraje_actual },
+                            { "kilometraje_service", kilometraje_service }
+                        };
+                        listaAutos.Add(nuevoAuto);
+                        volverMenu();
+                        break;
+                                                
+                    case 2:
+                        foreach (Dictionary<string, object> auto in listaAutos)
+                        {
+                            // Acceder a cada elemento del diccionario utilizando su clave
+                            Console.WriteLine("Patente: " + auto["patente"] + "Duenio: " + auto["duenio"] + ", Color: " + auto["color"] + ", Modelo: " + auto["modelo"]
+                                + ", Kilometraje actual: " + auto["kilometraje_actual"] + ", Kilometraje service: " + auto["kilometraje_service"]);
                         }
-                        Console.WriteLine("Ingrese auto a eliminar:");
-                        string borrar = Console.ReadLine();
-                        autos.Remove(borrar);
+                        Console.WriteLine("Ingrese patente del auto a eliminar:");
+                        string patenteEliminar = Console.ReadLine();
+                        Dictionary<string, object> autoABorrar = listaAutos.FirstOrDefault(t => t.ContainsKey("patente") && t["patente"].ToString() == patenteEliminar);
+                        if (autoABorrar != null)
+                        {
+                            listaAutos.Remove(autoABorrar);
+                            Console.WriteLine("Tesla eliminado con éxito.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("No se encontró ningún Tesla con la patente ingresada.");
+                        }
                         break;
                     case 3:
                         break;
@@ -107,6 +126,8 @@ namespace Proyecto1
             
 
             }
+            Console.WriteLine("Gracias por usar nuestro sistema!");
+            Console.ReadLine();
         }
 
         
