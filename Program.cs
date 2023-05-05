@@ -110,6 +110,37 @@ namespace Proyecto1
                         volverMenu();
                         break;
                     case 3:
+                        List<Dictionary<string, object>> autosService = new List<Dictionary<string, object>>();
+                        if(listaAutos.Count > 0)
+                        {
+                            foreach (Dictionary<string, object> auto in listaAutos)
+                            {
+                                int resultado = Convert.ToInt32(auto[key: "kilometraje_service"]) - Convert.ToInt32(auto["kilometraje_actual"]);
+                                if (resultado <= 1000)
+                                {
+                                    autosService.Add(auto);
+                                }
+                            }
+                            int aService = 0;
+                            foreach (Dictionary<string, object> autoService in autosService)
+                            {
+                                aService++;
+                                // Acceder a cada elemento del diccionario utilizando su clave
+                                Console.WriteLine($" --------------  Vehiculo {aService} ------------");
+                                Console.WriteLine($"Patente: {autoService["patente"]}");
+                                Console.WriteLine($"Duenio: {autoService["patente"]}");
+                                Console.WriteLine($"Color: {autoService["patente"]}");
+                                Console.WriteLine($"Modelo: {autoService["kilometraje_actual"]}");
+                                Console.WriteLine($"Kilometraje_actual: {autoService["kilometraje_actual"]}");
+                                Console.WriteLine($"Kilometraje_service: {autoService["kilometraje_service"]}");
+                            }
+                            volverMenu();
+                        }
+                        else
+                        {
+                            Console.WriteLine("La lista de Teslas esta vacia!");
+                            volverMenu();
+                        }
                         break;
                     case 4:
                         break;
