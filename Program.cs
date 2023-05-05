@@ -82,13 +82,20 @@ namespace Proyecto1
                         break;
                                                 
                     case 2:
+                        int contador = 0;
                         foreach (Dictionary<string, object> auto in listaAutos)
                         {
+                            contador++;
                             // Acceder a cada elemento del diccionario utilizando su clave
-                            Console.WriteLine("Patente: " + auto["patente"] + "Duenio: " + auto["duenio"] + ", Color: " + auto["color"] + ", Modelo: " + auto["modelo"]
-                                + ", Kilometraje actual: " + auto["kilometraje_actual"] + ", Kilometraje service: " + auto["kilometraje_service"]);
+                            Console.WriteLine($" --------------  Vehiculo {contador} ------------");
+                            Console.WriteLine($"Patente: {auto["patente"]}");
+                            Console.WriteLine($"Duenio: {auto["patente"]}");
+                            Console.WriteLine($"Color: {auto["patente"]}");
+                            Console.WriteLine($"Modelo: {auto["kilometraje_actual"]}");
+                            Console.WriteLine($"Kilometraje_actual: {auto["kilometraje_actual"]}");
+                            Console.WriteLine($"Kilometraje_service: {auto["kilometraje_service"]}");  
                         }
-                        Console.WriteLine("Ingrese patente del auto a eliminar:");
+                        Console.Write("Ingrese patente del auto a eliminar:");
                         string patenteEliminar = Console.ReadLine();
                         Dictionary<string, object> autoABorrar = listaAutos.FirstOrDefault(t => t.ContainsKey("patente") && t["patente"].ToString() == patenteEliminar);
                         if (autoABorrar != null)
@@ -100,6 +107,7 @@ namespace Proyecto1
                         {
                             Console.WriteLine("No se encontró ningún Tesla con la patente ingresada.");
                         }
+                        volverMenu();
                         break;
                     case 3:
                         break;
