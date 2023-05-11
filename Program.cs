@@ -16,6 +16,7 @@ namespace Proyecto1
     {
         // funcion volverMenu, permite que luego de ingresar los datos por el usuario, pregunte si desea volver o no al menu principal.
         public static bool aux = true;
+        
         static void volverMenu()
         {
             Console.Write("Desea volver a ver el menu inicial? Y/N:");
@@ -38,6 +39,7 @@ namespace Proyecto1
             // Menu de opciones, ejecutable por el usuario. (tener en cuanta, que al ingresar por primera vez, no hay datos en el sistema, por eso primero hay que dar
             // de alta por lo menos un Tesla, para luego poder utilizar las otras opciones)
 
+            int tesla = 0;
             List<Dictionary<string, object>> listaAutos = new List<Dictionary<string, object>>();
             Console.WriteLine("       ¡Bienvenido al sistema!");
 
@@ -58,20 +60,21 @@ namespace Proyecto1
                 switch (opcion)
                 {   // ingeso de datos del nuevo Tesla
                     case 1:
-                        Console.Write("Ingrese la patente del vehiculo: ");
+                        Console.Write("Ingrese la patente del Tesla: ");
                         string patente = Console.ReadLine();
-                        Console.Write("Ingrese el nombre y el apellido del duenio del vehiculo: ");
+                        Console.Write("Ingrese el nombre y el apellido del dueño del Tesla: ");
                         string duenio = Console.ReadLine();
-                        Console.Write("Ingrese el color del vehiculo: ");
+                        Console.Write("Ingrese el color del Tesla: ");
                         string color = Console.ReadLine();
                         Console.Write("Ingrese el modelo: ");
                         string modelo = Console.ReadLine();
-                        Console.Write("Ingrese el anio del Vehículo: ");
+                        Console.Write("Ingrese el año del Tesla: ");
                         int anio = int.Parse(Console.ReadLine());
-                        Console.Write("Ingrese el Kilometraje de su vehiculo: ");
+                        Console.Write("Ingrese el Kilometraje de su Tesla: ");
                         int kilometraje_actual = int.Parse(Console.ReadLine());
                         Console.Write("Ingrese el kilometraje de service: ");
                         int kilometraje_service = int.Parse(Console.ReadLine());
+                        tesla++;
                         Console.WriteLine("Tesla ingresado exitosamente!");
 
 
@@ -81,9 +84,10 @@ namespace Proyecto1
                             { "duenio", duenio },
                             { "color", color },
                             { "modelo", modelo },
-                            {"anio", anio},
+                            { "anio", anio},
                             { "kilometraje_actual", kilometraje_actual },
-                            { "kilometraje_service", kilometraje_service }
+                            { "kilometraje_service", kilometraje_service },
+                            { "tesla", tesla }
                         };
                         listaAutos.Add(nuevoAuto);
                         volverMenu();
@@ -91,14 +95,12 @@ namespace Proyecto1
 
                     case 2:
                         // eliminar un tesla
-                        int contador = 0;
                         foreach (Dictionary<string, object> auto in listaAutos)
                         {
-                            contador++;
                             // Acceder a cada elemento del diccionario utilizando su clave
-                            Console.WriteLine($"**********  Vehiculo{contador} *********************");
+                            Console.WriteLine($"**********  Tesla {auto["tesla"]} ********************");
                             Console.WriteLine($"Patente: {auto["patente"]}                        ");
-                            Console.WriteLine($"Duenio: {auto["duenio"]}                          ");
+                            Console.WriteLine($"Dueño: {auto["duenio"]}                          ");
                             Console.WriteLine($"Color: {auto["color"]}                            ");
                             Console.WriteLine($"Modelo: {auto["modelo"]}                          ");
                             Console.WriteLine($"Año: {auto["anio"]}                               ");
@@ -106,9 +108,9 @@ namespace Proyecto1
                             Console.WriteLine($"Kilometraje_service: {auto["kilometraje_service"]}");
                             Console.WriteLine("*******************************************");
                         }
-                        Console.Write("Ingrese patente del auto a eliminar:");
-                        string patenteEliminar = Console.ReadLine();
-                        Dictionary<string, object> autoABorrar = listaAutos.FirstOrDefault(t => t.ContainsKey("patente") && t["patente"].ToString() == patenteEliminar);
+                        Console.Write("Ingrese Tesla a eliminar:");
+                        string vehiculoEliminar = Console.ReadLine();
+                        Dictionary<string, object> autoABorrar = listaAutos.FirstOrDefault(t => t.ContainsKey("tesla") && t["tesla"].ToString() == vehiculoEliminar);
                         if (autoABorrar != null)
                         {
                             listaAutos.Remove(autoABorrar);
@@ -116,7 +118,7 @@ namespace Proyecto1
                         }
                         else
                         {
-                            Console.WriteLine("No se encontró ningún Tesla con la patente ingresada.");
+                            Console.WriteLine("No se encontró ningún Tesla con el numero ingresado.");
                         }
                         volverMenu();
                         break;
@@ -134,14 +136,12 @@ namespace Proyecto1
                                     autosService.Add(auto);
                                 }
                             }
-                            int aService = 0;
                             foreach (Dictionary<string, object> autoService in autosService)
                             {
-                                aService++;
                                 // Acceder a cada elemento del diccionario utilizando su clave
-                                Console.WriteLine($" --------------  Vehiculo {aService} ------------");
+                                Console.WriteLine($" --------------  Tesla {autoService["tesla"]} ------------");
                                 Console.WriteLine($"Patente: {autoService["patente"]}");
-                                Console.WriteLine($"Duenio: {autoService["duenio"]}");
+                                Console.WriteLine($"Dueño: {autoService["duenio"]}");
                                 Console.WriteLine($"Color: {autoService["color"]}");
                                 Console.WriteLine($"Modelo: {autoService["modelo"]}");
                                 Console.WriteLine($"Año: {autoService["anio"]}");
@@ -162,13 +162,19 @@ namespace Proyecto1
 
                         var ordenarLista = listaAutos.OrderBy(auto => (int)auto["anio"]);
 
-
-                        foreach (var auto in ordenarLista)
-                        {
-                            Console.WriteLine($"Modelo: {auto["modelo"]}, Año: {auto["anio"]}");
+                        if (ordenarLista != null) {
+                            Console.WriteLine("Teslas ordenados por año");
+                            foreach (var auto in ordenarLista)
+                            {
+                                Console.WriteLine($"Tesla: {auto["tesla"]}, Año: {auto["anio"]}");
+                            }
+                            volverMenu();
                         }
-
-                        volverMenu();
+                        else
+                        {
+                            Console.WriteLine("La lista de Teslas esta vacia!");
+                            volverMenu();
+                        }
                         break;
 
                     case 5:
@@ -178,12 +184,12 @@ namespace Proyecto1
 
                         if (autoMasViejo != null)
                         {
-                            Console.WriteLine("Auto más viejo:");
-                            Console.WriteLine($"Modelo: {autoMasViejo["modelo"]}, Año: {autoMasViejo["anio"]}");
+                            Console.WriteLine("Tesla más viejo");
+                            Console.WriteLine($"Tesla: {autoMasViejo["tesla"]}, Año: {autoMasViejo["anio"]}");
                         }
                         else
                         {
-                            Console.WriteLine("No hay autos en la lista.");
+                            Console.WriteLine("La lista de Teslas esta vacia.");
                         }
 
                         volverMenu();
