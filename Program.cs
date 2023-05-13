@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace Proyecto1
 {
-    // modelo, anio, kilometraje actual, kilometraje de service, color y el duenio
+    // modelo, año, kilometraje actual, kilometraje de service, color y el duenio
     internal class Program
     {
         // funcion volverMenu, permite que luego de ingresar los datos por el usuario, pregunte si desea volver o no al menu principal.
         public static bool aux = true;
-        
+
         static void volverMenu()
         {
             Console.Write("Desea volver a ver el menu inicial? Y/N:");
@@ -36,8 +36,8 @@ namespace Proyecto1
 
         static void Main(string[] args)
         {
-            // Menu de opciones, ejecutable por el usuario. (tener en cuanta, que al ingresar por primera vez, no hay datos en el sistema, por eso primero hay que dar
-            // de alta por lo menos un Tesla, para luego poder utilizar las otras opciones)
+            // Menu de opciones, ejecutable por el usuario. (Tener en cuanta, que al ingresar por primera vez, no hay datos en el sistema, por eso primero hay que dar
+            // de alta por lo menos un Tesla, para luego poder utilizar las otras opciones).
 
             int tesla = 0;
             List<Dictionary<string, object>> listaAutos = new List<Dictionary<string, object>>();
@@ -58,8 +58,11 @@ namespace Proyecto1
 
 
                 switch (opcion)
-                {   // ingeso de datos del nuevo Tesla
+                {   // Se considera que los datos ingresados son de tipo correcto.
+                    // Se piden al usuario que ingrese los datos del Tesla.
+                    // Los datos se almacenan en un diccionario que luego es ingresado en una lista de diccionarios con los distintos Teslas.
                     case 1:
+                        // Dar de alta un Tesla
                         Console.Write("Ingrese la patente del Tesla: ");
                         string patente = Console.ReadLine();
                         Console.Write("Ingrese el nombre y el apellido del dueño del Tesla: ");
@@ -94,7 +97,9 @@ namespace Proyecto1
                         break;
 
                     case 2:
-                        // eliminar un tesla
+                        // Eliminar un Tesla.
+                        // El metodo de eliminacion es mediante el identificador unico de vehiculo que se almacena en la clave "tesla" del diccionario.
+                        // Si el usuario elige un Tesla inexistente se muestra un aviso por pantalla.
                         foreach (Dictionary<string, object> auto in listaAutos)
                         {
                             // Acceder a cada elemento del diccionario utilizando su clave
@@ -124,20 +129,44 @@ namespace Proyecto1
                         break;
 
                     case 3:
-                        // mostrar proximo a service
-                        List<Dictionary<string, object>> autosService = new List<Dictionary<string, object>>();
+                        // Mostrar proximo a service.
+                        // Las condiciones del próximo service son calculadas mediante dos variables, una Kilometraje_actual y la otra kilometraje_service (acá se ingresa en que kilometraje le toca el proximo service).
+                        // Contiene dos alternativas, la primera es cuando faltan 1000 km para el proximo service, almacena los Teslas en una lista y los muestra por pantalla.
+                        // La segunda cuando se pasó del kilometraje o es igual al de service, se agrega a una lista diferente a la anterior y se muestran por pantalla.
+                        // En el caso que no haya Teslas almacenados se muestra un mensaje por pantalla.
+
+                        List<Dictionary<string, object>> autosService = new List<Dictionary<string, object>>();  //lista de proximos al service
+                        List<Dictionary<string, object>> autosServiceUrgente = new List<Dictionary<string, object>>(); //lista de service urgentes
                         if (listaAutos.Count > 0)
                         {
                             foreach (Dictionary<string, object> auto in listaAutos)
                             {
-                                int resultado = Convert.ToInt32(auto[key: "kilometraje_service"]) - Convert.ToInt32(auto["kilometraje_actual"]);
-                                if (resultado <= 1000)
+                                if (Convert.ToInt32(auto[key: "kilometraje_service"]) <= Convert.ToInt32(auto["kilometraje_actual"]))
                                 {
-                                    autosService.Add(auto);
+                                    auto.Add("urgente", true);
+                                    autosServiceUrgente.Add(auto);
+                                }
+
+                                else if (Convert.ToInt32(auto[key: "kilometraje_service"]) > Convert.ToInt32(auto["kilometraje_actual"]))
+                                {
+                                    int resultado = (Convert.ToInt32(auto[key: "kilometraje_service"]) - Convert.ToInt32(auto["kilometraje_actual"]));
+                                    if (resultado <= 1000)
+                                    {
+                                        auto.Add("urgente", false);
+                                        autosService.Add(auto);
+                                    }                                
                                 }
                             }
+                            bool mostreLista = false;
+                            
                             foreach (Dictionary<string, object> autoService in autosService)
                             {
+                                if (!mostreLista)
+                                {
+                                    Console.WriteLine();
+                                    Console.WriteLine("LISTA DE TESLAS QUE NECESITA SERVICE.");
+                                    mostreLista = true;
+                                }
                                 // Acceder a cada elemento del diccionario utilizando su clave
                                 Console.WriteLine($" --------------  Tesla {autoService["tesla"]} ------------");
                                 Console.WriteLine($"Patente: {autoService["patente"]}");
@@ -148,6 +177,27 @@ namespace Proyecto1
                                 Console.WriteLine($"Kilometraje_actual: {autoService["kilometraje_actual"]}");
                                 Console.WriteLine($"Kilometraje_service: {autoService["kilometraje_service"]}");
                             }
+
+                            bool mostreUrgente = false;
+                            foreach (Dictionary<string, object> autoServiceUrg in autosServiceUrgente)
+                            { 
+                                if (!mostreUrgente)
+                                {
+                                    Console.WriteLine();
+                                    Console.WriteLine("LISTA DE TESLAS QUE NECESITAN SERVICE URGENTE!");
+                                    mostreUrgente = true;
+                                }
+                                // Acceder a cada elemento del diccionario utilizando su clave
+                                Console.WriteLine($" --------------  Tesla {autoServiceUrg["tesla"]} ------------");
+                                Console.WriteLine($"Patente: {autoServiceUrg["patente"]}");
+                                Console.WriteLine($"Dueño: {autoServiceUrg["duenio"]}");
+                                Console.WriteLine($"Color: {autoServiceUrg["color"]}");
+                                Console.WriteLine($"Modelo: {autoServiceUrg["modelo"]}");
+                                Console.WriteLine($"Año: {autoServiceUrg["anio"]}");
+                                Console.WriteLine($"Kilometraje_actual: {autoServiceUrg["kilometraje_actual"]}");
+                                Console.WriteLine($"Kilometraje_service: {autoServiceUrg["kilometraje_service"]}");
+                            }
+                        
                             volverMenu();
                         }
                         else
@@ -158,18 +208,14 @@ namespace Proyecto1
                         break;
 
                     case 4:
-                        // reordenar el listado por anio
+                        // Reordenar el listado por año.
+                        // Se recorre el listado de Teslas y se los ordena en forma ascendente.
+                        // En el caso que no haya Teslas almacenados se muestra un mensaje por pantalla.
 
                         var ordenarLista = listaAutos.OrderBy(auto => (int)auto["anio"]);
 
-<<<<<<< HEAD
-
-                        foreach (var auto in ordenarLista)
+                        if (ordenarLista != null)
                         {
-                            Console.WriteLine($"Modelo: {auto["modelo"]}, Año: {auto["anio"]}");
-                            Console.WriteLine("Tesla n°: ", auto);
-=======
-                        if (ordenarLista != null) {
                             Console.WriteLine("Teslas ordenados por año");
                             foreach (var auto in ordenarLista)
                             {
@@ -181,13 +227,14 @@ namespace Proyecto1
                         {
                             Console.WriteLine("La lista de Teslas esta vacia!");
                             volverMenu();
->>>>>>> e7f86e66ad949633602db501a2dee1c06a352e1b
                         }
                         break;
 
                     case 5:
 
-                        // Mostrar el auto más viejo
+                        // Mostrar el Tesla más viejo.
+                        // Se recorre la lista de Teslas y se muestra por pantalla el Tesla mas antiguo.
+                        // En el caso que no haya Teslas almacenados se muestra un mensaje por pantalla.
                         var autoMasViejo = listaAutos.OrderBy(auto => (int)auto["anio"]).FirstOrDefault();
 
                         if (autoMasViejo != null)
@@ -204,7 +251,7 @@ namespace Proyecto1
                         break;
 
 
-                    // Salir del programa    
+                    // Salir del programa.
                     case 6:
                         aux = false;
                         break;
@@ -212,6 +259,7 @@ namespace Proyecto1
                         break;
                 }
             }
+            // Se muestra un mensaje en pantalla al cerrar el programa.
             Console.WriteLine("Gracias por usar nuestro sistema!");
             Console.ReadLine();
         }
