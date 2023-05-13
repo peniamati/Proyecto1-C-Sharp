@@ -162,6 +162,13 @@ namespace Proyecto1
 
                         var ordenarLista = listaAutos.OrderBy(auto => (int)auto["anio"]);
 
+<<<<<<< HEAD
+
+                        foreach (var auto in ordenarLista)
+                        {
+                            Console.WriteLine($"Modelo: {auto["modelo"]}, Año: {auto["anio"]}");
+                            Console.WriteLine("Tesla n°: ", auto);
+=======
                         if (ordenarLista != null) {
                             Console.WriteLine("Teslas ordenados por año");
                             foreach (var auto in ordenarLista)
@@ -174,6 +181,7 @@ namespace Proyecto1
                         {
                             Console.WriteLine("La lista de Teslas esta vacia!");
                             volverMenu();
+>>>>>>> e7f86e66ad949633602db501a2dee1c06a352e1b
                         }
                         break;
 
